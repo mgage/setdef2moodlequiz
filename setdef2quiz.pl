@@ -41,9 +41,6 @@ use Carp;
 	    The name of the course rendering the problems on the opaque server. Default: daemon_course
 	--qnum=s
 	    The initial Question Number -- set to 1000 as a default
-	--format=s
-		--format=1 indicates the original set definition format
-		--format=2 (default) indicates the expanded set definition format (since release 2.12) 
 	--help
 	     Print help message.
 =cut
@@ -112,7 +109,7 @@ EOF
 
 
 if ($read_directory_mode ) { # process set definition files in the directory
-	my $dir = abs_path($courseName);
+	my $dir = abs_path($files_and_directories[0]); # read from directory of .def files
 	find(\&wanted, ($dir));
 } else { #  process each set definition file in list
 	while(<@files_and_directories>) {
@@ -270,6 +267,9 @@ sub print_xml_formatted_question {
       <qe>
         <text>$serverURL/opaqueserver_wsdl</text>
       </qe>
+      <qb>
+        <text>$serverURL/webwork2/$serverCourseName</text>
+      </qb>
     </engine>
     <tags>
       <tag><text>ODE</text>
@@ -312,15 +312,20 @@ print <<'EOT';
 
 	Options
 	
+	--courseName=s 
+		Normally the course name is taken from the directory containing the definition files,
+		but this overrides that choice.
 	--category=s
-		Often set to the name of the course containing the set definition files.
+		Often set to the course by default.
 	--engine=s
 		The name for the opaque engine, set to category by default.
 	--server=s
-		The URL of the webwork opaque server 
-	--format=s
-		--format=1 indicates the original set definition format
-		--format=2 (default) indicates the expanded set definition format (since release 2.12) 
+		The URL of the webwork opaque server. e.g. https://hosted2.webwork.rochester.edu
+	--servercourse=s
+	    The name of the course rendering the problems on the opaque server. Default: daemon_course
+	--qnum=s
+	    The initial Question Number -- set to 1000 as a default
+
 =cut
 
 EOT
